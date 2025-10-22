@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MACROSYNC - Your Nutrition. Unlocked.</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Global Variables & Reset --- */
+        :root {
+            /* Main Luxurious Beige */
+            --color-primary: #F5F5DC;
+            /* Deep Aggressive Contrast */
+            --color-secondary: #1A1A1A;
+            /* Subtle Accent/Shadow */
+            --color-accent: #B8A88F;
+            /* Aggressive Font */
+            --font-aggressive: 'Montserrat', sans-serif;
+            /* Luxury Sub-font */
+            --font-luxury: 'Playfair Display', serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            font-family: var(--font-luxury);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Header & Navigation --- */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5vh 5vw;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(245, 245, 220, 0.95);
+            border-bottom: 2px solid var(--color-secondary);
+        }
+
+        .logo {
+            font-family: var(--font-aggressive);
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-secondary);
+            margin-left: 2.5rem;
+            font-family: var(--font-aggressive);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .cta-button {
+            padding: 0.8rem 1.5rem;
+            border: 3px solid var(--color-secondary);
+            background-color: transparent;
+            color: var(--color-secondary);
+            font-family: var(--font-aggressive);
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease-in-out;
+            /* Aggressive Hover Shape */
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+        }
+
+        .cta-button:hover {
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
+            transform: scale(1.05);
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 5vw;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 45%;
+        }
+
+        .aggressive-title {
+            font-family: var(--font-aggressive);
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1.05;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            perspective: 1000px; /* Needed for 3D Text effects */
+        }
+
+        /* Individual word styling for aggressive 3D entrance */
+        .aggressive-title .word {
+            display: block;
+            transform-origin: bottom;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform: translateY(50px) rotateX(90deg); /* Initial state: pushed back/hidden */
+        }
+
+        /* State when visible (controlled by JS if needed, but here we set to visible) */
+        .aggressive-title:hover .word,
+        .aggressive-title .word {
+            transform: translateY(0) rotateX(0deg);
+        }
+
+        .luxury-subtext {
+            font-family: var(--font-luxury);
+            font-size: 1.4rem;
+            color: var(--color-secondary);
+            max-width: 90%;
+            font-style: italic;
+        }
+
+        /* Container for Three.js 3D rendering */
+        .three-d-placeholder {
+            flex: 1;
+            max-width: 50%;
+            height: 60vh;
+            background-color: var(--color-accent);
+            border: 5px solid var(--color-secondary);
+            box-shadow: 15px 15px 0px var(--color-secondary); /* Aggressive shadow */
+        }
+
+        /* --- Features Section --- */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            padding: 12vh 5vw;
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
+        }
+
+        .feature-card {
+            padding: 2.5rem;
+            border-right: 1px solid var(--color-accent);
+        }
+
+        .feature-card:last-child {
+            border-right: none;
+        }
+
+        .feature-card h2 {
+            font-family: var(--font-aggressive);
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: var(--color-primary);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .feature-card p {
+            font-family: var(--font-luxury);
+            font-size: 1.1rem;
+            color: var(--color-accent);
+        }
+
+        /* --- Footer --- */
+        .main-footer {
+            padding: 3vh 5vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-aggressive);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--color-secondary);
+        }
+
+        .social-links a {
+            text-decoration: none;
+            color: var(--color-secondary);
+            margin-left: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        /* Media Query for Mobile/Tablet */
+        @media (max-width: 1024px) {
+            .hero-section {
+                flex-direction: column;
+                min-height: auto;
+                padding-top: 5vh;
+            }
+            .hero-content {
+                max-width: 100%;
+                text-align: center;
+                margin-bottom: 5vh;
+            }
+            .aggressive-title {
+                font-size: 3rem;
+            }
+            .three-d-placeholder {
+                max-width: 100%;
+                height: 40vh;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .feature-card {
+                border-right: none;
+                border-bottom: 1px solid var(--color-accent);
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">MACROSYNC</div>
+        <nav class="nav-links">
+
+            <a href="#about" class="nav-item">Vision</a>
+            <a href="#features" class="nav-item">Technology</a>
+            <a href="#app" class="nav-item">App</a>
+        </nav>
+        <a href="analysis.html" class="cta-button">Analyze Now</a>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="aggressive-title">
+                <span class="word">YOUR</span>
+                <span class="word">NUTRITION.</span>
+                <span class="word">UNLOCKED.</span>
+            </h1>
+            <p class="luxury-subtext">The revolutionary way to see what you eat. Precise, immediate, inevitable.</p>
+        </div>
+        <div id="three-scene-container" class="three-d-placeholder">
+            </div>
+    </section>
+
+    <section id="features" class="feature-grid">
+        <div class="feature-card">
+            <h2>01. MACROS</h2>
+            <p>Proteins, Carbs, Fats. Instantly dissected. No more guesswork, only certainty.</p>
+        </div>
+        <div class="feature-card">
+            <h2>02.VITAMINS</h2>
+            <p>Micronutrient breakdown. The hidden details that define your peak performance.</p>
+        </div>
+        <div class="feature-card">
+            <h2>03. SNAP & SEE</h2>
+            <p>Upload a photo of your meal. The powerful MACROSYNC AI algorithm handles the complex analysis in seconds.</p>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <p>© 2025 MACROSYNC. Mastery Through Data.</p>
+        <div class="social-links">
+            <a href="#">Instagram</a>
+            <a href="#">Twitter</a>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        // --- 3D Transition Blueprint with Three.js ---
+
+        let scene, camera, renderer, geometry, material, mesh;
+
+        function initThreeScene() {
+            const container = document.getElementById('three-scene-container');
+            if (!container) return; // Exit if container doesn't exist
+
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            // 1. Scene Setup
+            scene = new THREE.Scene();
+
+            // Set a subtle beige background color on the scene
+            // scene.background = new THREE.Color(0xF5F5DC);
+
+            // 2. Camera Setup (Aggressive perspective)
+            camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+            camera.position.z = 5;
+
+            // 3. Renderer Setup
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // Alpha:true for transparent canvas
+            renderer.setSize(width, height);
+            container.appendChild(renderer.domElement);
+
+            // 4. Create an object (A rotating, aggressive 3D mesh - use a wireframe for a data/luxury look)
+            geometry = new THREE.IcosahedronGeometry(2, 0); // A complex, aggressive shape
+            material = new THREE.MeshBasicMaterial({
+                color: 0x1A1A1A, // Deep contrast
+                wireframe: true,
+                transparent: true,
+                opacity: 0.8
+            });
+            mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            // Handle resizing
+            window.addEventListener('resize', () => {
+                const newWidth = container.clientWidth;
+                const newHeight = container.clientHeight;
+                renderer.setSize(newWidth, newHeight);
+                camera.aspect = newWidth / newHeight;
+                camera.updateProjectionMatrix();
+            });
+        }
+
+        // 5. Animation Loop (The 3D Transition)
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Aggressive, fast rotation for the 3D element
+            if (mesh) {
+                mesh.rotation.x += 0.005;
+                mesh.rotation.y += 0.008;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Initialize when the page loads
+        initThreeScene();
+        if (renderer) {
+            animate();
+        }
+    </script>
+</body>
+</html>

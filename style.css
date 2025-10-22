@@ -1,0 +1,188 @@
+/* --- Global Reset & Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Playfair+Display:ital@0;1&display=swap');
+
+:root {
+    /* Main Luxurious Beige */
+    --color-primary: #F5F5DC;
+    /* Deep Aggressive Contrast */
+    --color-secondary: #1A1A1A;
+    /* Subtle Accent/Shadow */
+    --color-accent: #B8A88F;
+    /* Aggressive Font */
+    --font-aggressive: 'Montserrat', sans-serif;
+    /* Luxury Sub-font */
+    --font-luxury: 'Playfair Display', serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    font-family: var(--font-luxury);
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scroll from 3D effects */
+}
+
+/* --- Header & Navigation --- */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.5vh 5vw;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: rgba(245, 245, 220, 0.9); /* Slight transparency for luxury */
+    border-bottom: 2px solid var(--color-secondary); /* Aggressive line */
+}
+
+.logo {
+    font-family: var(--font-aggressive);
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: 0.3em; /* Aggressive spacing */
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--color-secondary);
+    margin-left: 2.5rem;
+    font-family: var(--font-aggressive);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--color-accent); /* Subtle hover */
+}
+
+.cta-button {
+    padding: 0.8rem 1.5rem;
+    border: 3px solid var(--color-secondary);
+    background-color: transparent;
+    color: var(--color-secondary);
+    font-family: var(--font-aggressive);
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease-in-out;
+    /* Aggressive Hover Effect */
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+}
+
+.cta-button:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+    transform: scale(1.05);
+}
+
+/* --- Hero Section --- */
+.hero-section {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 5vw;
+}
+
+.hero-content {
+    flex: 1;
+    max-width: 45%;
+}
+
+.aggressive-title {
+    font-family: var(--font-aggressive);
+    font-size: 4.5rem;
+    font-weight: 900;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+
+/* Aggressive Luxury Typography Detail */
+.aggressive-title .word {
+    display: block;
+    /* Allows for line-by-line 3D transition effects */
+}
+
+.luxury-subtext {
+    font-family: var(--font-luxury);
+    font-size: 1.3rem;
+    color: var(--color-secondary);
+    max-width: 80%;
+}
+
+.three-d-placeholder {
+    flex: 1;
+    max-width: 50%;
+    height: 60vh;
+    /* Placeholder style */
+    background-color: var(--color-accent);
+    border: 5px solid var(--color-secondary); /* Aggressive Frame */
+}
+
+/* --- Features Section --- */
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    padding: 10vh 5vw;
+    background-color: var(--color-secondary); /* High-contrast section */
+    color: var(--color-primary);
+}
+
+.feature-card {
+    padding: 2.5rem;
+    border-right: 1px solid var(--color-accent);
+}
+
+.feature-card:last-child {
+    border-right: none;
+}
+
+.feature-card h2 {
+    font-family: var(--font-aggressive);
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+    letter-spacing: 0.1em;
+}
+
+.feature-card p {
+    font-family: var(--font-luxury);
+    font-size: 1.1rem;
+    color: var(--color-accent);
+}
+
+/* --- Footer --- */
+.main-footer {
+    padding: 3vh 5vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-aggressive);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--color-secondary);
+}
+
+.social-links a {
+    text-decoration: none;
+    color: var(--color-secondary);
+    margin-left: 1rem;
+    text-transform: uppercase;
+}
+
+/* --- 3D Transition Placeholder Styles --- */
+/* You would use JavaScript (e.g., Three.js, GSAP) to apply the actual 3D transitions.
+   The luxury and aggression of the transitions come from:
+   1. Perspective/Camera position (Luxury)
+   2. Speed and Sharpness of movement (Aggression)
+   3. Custom shaders (Luxury)
+*/

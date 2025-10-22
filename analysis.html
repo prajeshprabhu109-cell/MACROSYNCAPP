@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MACROSYNC - Gemini AI Analysis</title>
+
+    <!-- Google Fonts for Aggressive (Montserrat) and Luxury (Playfair Display) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- CSS: LUXURIOUS, AGGRESSIVE, BEIGE STYLING (All CSS is consolidated here) -->
+    <style>
+        /* --- Global Variables & Reset --- */
+        :root {
+            --color-primary: #F5F5DC;
+            --color-secondary: #1A1A1A;
+            --color-accent: #B8A88F;
+            --font-aggressive: 'Montserrat', sans-serif;
+            --font-luxury: 'Playfair Display', serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            font-family: var(--font-luxury);
+            line-height: 1.6;
+            padding-top: 5vh;
+        }
+
+        /* --- Header/Back Link --- */
+        .header-minimal {
+            padding: 0 5vw;
+            margin-bottom: 5vh;
+        }
+
+        .header-minimal a {
+            font-family: var(--font-aggressive);
+            text-decoration: none;
+            color: var(--color-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        /* --- Main Analysis Layout --- */
+        .analysis-container {
+            display: flex;
+            min-height: 85vh;
+            padding: 0 5vw;
+            gap: 5vw;
+        }
+
+        /* --- Left Panel: Image & Upload --- */
+        .input-panel {
+            flex: 2;
+            padding: 3rem;
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
+            box-shadow: 10px 10px 0px var(--color-accent);
+        }
+
+        .input-panel h1 {
+            font-family: var(--font-aggressive);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--color-primary);
+        }
+
+        #meal-photo {
+            display: none;
+        }
+
+        .upload-area {
+            height: 300px;
+            border: 3px dashed var(--color-accent);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        #image-preview {
+            width: 100%;
+            height: 100%;
+            display: none;
+            object-fit: cover;
+        }
+
+        .analyze-button {
+            width: 100%;
+            padding: 1.5rem 0;
+            background-color: var(--color-accent);
+            border: 3px solid var(--color-accent);
+            color: var(--color-secondary);
+            font-family: var(--font-aggressive);
+            font-size: 1.2rem;
+            font-weight: 900;
+            cursor: pointer;
+            text-transform: uppercase;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+            transition: all 0.3s;
+        }
+
+        .analyze-button:hover {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+        }
+
+        /* --- Right Panel: Results --- */
+        .results-panel {
+            flex: 3;
+            padding: 3rem;
+            border: 5px solid var(--color-secondary);
+        }
+
+        .results-panel h2 {
+            font-family: var(--font-aggressive);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+        }
+
+        /* Loading Indicator Style */
+        .loading {
+            font-family: var(--font-aggressive);
+            font-size: 1.5rem;
+            text-align: center;
+            color: var(--color-secondary);
+            margin-top: 5rem;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1.0; }
+            100% { opacity: 0.8; }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .analysis-container {
+                flex-direction: column;
+                gap: 5vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-minimal">
+        <a href="index.html">← MACROSYNC HOME</a>
+    </div>
+
+    <div class="analysis-container">
+
+        <!-- Left Panel: Image Input -->
+        <div class="input-panel">
+            <h1>THE AI IS READY.</h1>
+            <p style="color: var(--color-accent); font-style: italic; margin-bottom: 1.5rem;">Upload your meal for true nutritional dissection.</p>
+
+            <label for="meal-photo" class="upload-area" id="upload-box">
+                <img id="image-preview" alt="Meal Preview">
+                <p id="upload-text">CLICK TO CAPTURE OR UPLOAD MEAL</p>
+            </label>
+            <input type="file" id="meal-photo" accept="image/*" required>
+
+            <button class="analyze-button" onclick="analyzeMeal()" disabled>Analyze Meal</button>
+        </div>
+
+        <!-- Right Panel: Results Display -->
+        <div class="results-panel">
+            <h2>MACROS & VITALS REPORT</h2>
+            <div id="data-output">
+                <p style="font-family: var(--font-luxury); color: var(--color-accent);">Upload an image to initiate the Gemini AI analysis.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT: Gemini AI Integration -->
+   <script>
+        const photoInput = document.getElementById('meal-photo');
+        const imagePreview = document.getElementById('image-preview');
+        const dataOutput = document.getElementById('data-output');
+        const analyzeButton = document.querySelector('.analyze-button');
+
+        // --- GEMINI API CONFIGURATION (NOW CORRECT) ---
+        // Your valid, full API Key is inserted here:
+        const apiKey = "AIzaSyA_FGh7kx5sjA9DBeKkJ3ULlHrQsW6Gqlw";
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        let base64ImageData = null;
+
+        // Helper function to convert file to Base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    // Extract only the base64 string (remove the "data:image/jpeg;base64," part)
+                    const base64String = reader.result.split(',')[1];
+                    resolve(base64String);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Image Preview and Base64 Generation
+        photoInput.addEventListener('change', async function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                try {
+                    base64ImageData = await fileToBase64(file);
+                    imagePreview.src = URL.createObjectURL(file);
+                    imagePreview.style.display = 'block';
+                    document.getElementById('upload-text').style.display = 'none';
+                    document.getElementById('upload-box').style.padding = '0';
+                    document.getElementById('upload-box').style.height = '300px';
+                    analyzeButton.disabled = false;
+                    analyzeButton.textContent = "ANALYZE MEAL";
+                } catch (error) {
+                    console.error("Error reading file:", error);
+                    alert("Could not load image file.");
+                }
+            }
+        });
+
+        // Exponential Backoff for API Retries (Robust connection handling)
+        async function fetchWithRetry(url, options, maxRetries = 3) {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.status === 429 && i < maxRetries - 1) {
+                        const delay = Math.pow(2, i) * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        continue;
+                    }
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`API Request failed with status ${response.status}: ${JSON.stringify(errorData)}`);
+                    }
+                    return response;
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                }
+            }
+        }
+
+        // --- THE CORE AI ANALYSIS FUNCTION using Gemini ---
+        async function analyzeMeal() {
+            if (!base64ImageData) {
+                alert("Please upload a meal photo first.");
+                return;
+            }
+
+            analyzeButton.textContent = "AI PROTOCOL ACTIVE...";
+            analyzeButton.disabled = true;
+            dataOutput.innerHTML = '<p class="loading">DECRYPTING FOOD ARCHITECTURE...</p>';
+
+            // The prompt dictates the aggressive, structured report style
+            const systemInstruction = "You are MACROSYNC AI, a precise, luxury nutrition analyst. Analyze the food in the image. Estimate portion size, ingredients, and provide a detailed, accurate-sounding nutritional report. Return ONLY the report content in structured Markdown format, following the required section headers below. Use bold text for values.";
+
+            const userQuery = `Analyze the food in this image. Provide the report details for a 200g serving of the main dish. Structure the report precisely into two sections using markdown headers: ## MACRONUTRIENTS - FUEL MASTERY and ## MICRONUTRIENTS & VITALS - OPTIMIZED PERFORMANCE. For each item, include the value and a brief, aggressive status note.
+
+**REQUIRED FORMAT:**
+- Start with: Recognized Dish: [Name of Dish]
+- Use Markdown list items (* ) for all data points.
+- Include all fields: Carbohydrates, Proteins, Fats, Fiber, Energy (Kcal), Iron, Calcium, Vitamin D, Vitamin C, Potassium, Zinc.`;
+
+            const mimeType = photoInput.files[0].type;
+
+            const payload = {
+                contents: [{
+                    role: "user",
+                    parts: [
+                        { text: userQuery },
+                        {
+                            inlineData: {
+                                mimeType: mimeType,
+                                data: base64ImageData
+                            }
+                        }
+                    ]
+                }],
+                systemInstruction: {
+                    parts: [{ text: systemInstruction }]
+                }
+            };
+
+            try {
+                const response = await fetchWithRetry(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text || "AI failed to generate a complete report. Please try a clearer image.";
+
+                // Format the output into the luxurious report structure
+                const formattedReport = formatGeminiReport(generatedText);
+
+                dataOutput.innerHTML = formattedReport;
+
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                dataOutput.innerHTML = `
+                    <h3 style="color: red; font-family: var(--font-aggressive); margin-top: 5rem; text-align: center; border: 3px solid red; padding: 20px;">
+                        AI CONNECTION ERROR.
+                    </h3>
+                    <p style="text-align:center; font-family: var(--font-luxury); color: var(--color-secondary); margin-top: 10px;">
+                        The Gemini AI failed to analyze the image. Please try again or check the console for details.
+                    </p>
+                    <p style="text-align:center; font-style: italic; color: var(--color-accent);">${error.message}</p>
+                `;
+            }
+
+            analyzeButton.textContent = "RE-ANALYZE MEAL";
+            analyzeButton.disabled = false;
+        }
+
+        // Function to style and format the Gemini Markdown output into the report structure
+        function formatGeminiReport(markdownText) {
+            const lines = markdownText.split('\n');
+            let dishName = "MACROS & VITALS REPORT";
+            let content = "";
+            let inList = false;
+
+            // 1. Extract Dish Name
+            const dishNameLine = lines.find(line => line.startsWith('Recognized Dish:'));
+            if (dishNameLine) {
+                dishName = dishNameLine.replace('Recognized Dish:', '').trim().toUpperCase();
+            }
+
+            for (const line of lines) {
+                if (line.startsWith('## ')) {
+                    if (inList) content += '</ul></div>';
+                    const sectionTitle = line.substring(3).trim();
+                    content += `<div class="data-section"><h3>${sectionTitle}</h3><ul class="data-list">`;
+                    inList = true;
+                } else if (line.startsWith('* ')) {
+                    // Convert Markdown list item to structured list (Item: <strong>Value</strong>)
+                    const parts = line.substring(2).split(':');
+                    if (parts.length > 1) {
+                        content += `<li>${parts[0].trim()}: <strong>${parts.slice(1).join(':').trim()}</strong></li>`;
+                    }
+                } else if (line.trim() !== '') {
+                    // Any other significant text is a paragraph
+                    content += `<p style="margin-top: 10px; font-style: italic;">${line.trim()}</p>`;
+                }
+            }
+            if (inList) content += '</ul></div>';
+
+            // Final report structure
+            return `
+                <p style="font-family: var(--font-aggressive); font-size: 1.1rem; color: var(--color-secondary); margin-bottom: 2rem;">
+                    **RECOGNIZED MEAL:** <span style="color: var(--color-accent);">${dishName}</span>
+                </p>
+                ${content}
+                <p style="font-family: var(--font-aggressive); font-size: 1rem; color: var(--color-secondary); margin-top: 2rem; text-align: center;">DATA IS POWER. USE IT.</p>
+            `;
+        }
+    </script>
+</body>
+</html>
