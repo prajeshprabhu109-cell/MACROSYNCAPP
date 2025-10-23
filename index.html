@@ -3,7 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MACROSYNC - Your Nutrition. Unlocked.</title>
+    <title>macrwiuP<style>
+    /* Global Variables and Desktop/Base Styles */
+    :root {
+        --p:#F5F5DC; --s:#1A1A1A; --a:#B8A88F; --f-a:'Montserrat',sans-serif; --f-l:'Playfair Display',serif;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background-color:var(--p);color:var(--s);font-family:var(--f-l);line-height:1.6;padding-top:5vh;}
+
+    /* Header Minimal */
+    .h-m{padding:0 5vw;margin-bottom:5vh;}
+    .h-m a{font-family:var(--f-a);text-decoration:none;color:var(--s);font-size:.9rem;text-transform:uppercase;letter-spacing:.1em;display:inline-block;transition:transform .2s;}
+
+    /* Analysis Container (FLEX ROW for Desktop) */
+    .a-c{display:flex;min-height:85vh;padding:0 5vw;gap:5vw;}
+
+    /* Input Panel */
+    .i-p{flex:2;padding:3rem;background-color:var(--s);color:var(--p);box-shadow:10px 10px 0 var(--a);}
+    .i-p h1{font-family:var(--f-a);font-size:2.5rem;margin-bottom:1rem;color:var(--p);}
+
+    #m-p{display:none;}
+    .u-a{height:300px;border:3px dashed var(--a);display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;margin-bottom:2rem;overflow:hidden;}
+    #i-p{width:100%;height:100%;display:none;object-fit:cover;}
+
+    .a-b{width:100%;padding:1.5rem 0;background-color:var(--a);border:3px solid var(--a);color:var(--s);font-family:var(--f-a);font-size:1.2rem;font-weight:900;cursor:pointer;text-transform:uppercase;clip-path:polygon(0 0,100% 0,100% 90%,90% 100%,0 100%);transition:all .3s;}
+    .a-b:hover{background-color:var(--p);color:var(--s);}
+
+    /* Results Panel */
+    .r-p{flex:3;padding:3rem;border:5px solid var(--s);}
+    .r-p h2{font-family:var(--f-a);font-size:2rem;margin-bottom:2rem;text-transform:uppercase;}
+
+    /* Loading Indicator */
+    .loading{font-family:var(--f-a);font-size:1.5rem;text-align:center;color:var(--s);margin-top:5rem;animation:pulse 1.5s infinite;}
+    @keyframes pulse{0%{opacity:.8;}50%{opacity:1.0;}100%{opacity:.8;}}
+
+    /* Data Sections in Report */
+    .d-s h3{font-family:var(--f-a);font-size:1.2rem;color:var(--a);border-bottom:2px solid var(--s);padding-bottom:.5rem;margin-bottom:1rem;text-transform:uppercase;}
+    .d-l{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;font-family:var(--f-l);}
+    .d-l strong{font-weight:700;font-family:var(--f-a);display:block;color:var(--s);font-size:1.1rem;}
+
+
+    /* ================================================= */
+    /* === MOBILE OPTIMIZATION: Max Width 768px (Phone/Tablet) === */
+    /* ================================================= */
+    @media (max-width: 768px) {
+
+        /* 1. Main Container: Stack columns vertically */
+        .a-c {
+            flex-direction: column;
+            padding: 0 3vw; /* Reduce side padding for phones */
+            gap: 3vh; /* Reduce vertical gap */
+        }
+
+        /* 2. Panels: Standardize padding and remove the aggressive shadow for cleaner stacking */
+        .i-p, .r-p {
+            padding: 1.5rem;
+            width: 100%;
+            box-shadow: none;
+        }
+
+        /* 3. Typography: Scale down for better readability on small screens */
+        .i-p h1 {
+            font-size: 1.8rem; /* Scale down "THE AI IS READY" */
+        }
+        .r-p h2 {
+            font-size: 1.5rem; /* Scale down "MACROS & VITALS REPORT" */
+        }
+
+        /* 4. Data Grid: Stack the two-column list vertically */
+        .d-l {
+            grid-template-columns: 1fr; /* Change from 2 columns to 1 column */
+            gap: 0.5rem; /* Tighten the gaps */
+        }
+
+        /* 5. Image Area: Make the upload area auto-height or smaller */
+        .u-a {
+            height: 250px;
+            max-height: 50vw; /* Keep image area proportional to screen width */
+        }
+    }
+</style>o - Your Nutrition. Unlocked.</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
@@ -233,9 +312,7 @@
         <div class="logo">MACROSYNC</div>
         <nav class="nav-links">
 
-            <a href="#about" class="nav-item">Vision</a>
-            <a href="#features" class="nav-item">Technology</a>
-            <a href="#app" class="nav-item">App</a>
+
         </nav>
         <a href="analysis.html" class="cta-button">Analyze Now</a>
     </header>
@@ -271,7 +348,7 @@
     <footer class="main-footer">
         <p>© 2025 MACROSYNC. Mastery Through Data.</p>
         <div class="social-links">
-            <a href="#">Instagram</a>
+            <a href="https://www.instagram.com/macrosync_official/">Instagram</a>
             <a href="#">Twitter</a>
         </div>
     </footer>
