@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MACROSYNC - Personalized Diet Plan</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Compact Base Styles --- */
+        :root {
+            --p:#F5F5DC; --s:#1A1A1A; --a:#B8A88F; --f-a:'Montserrat',sans-serif; --f-l:'Playfair Display',serif;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background-color:var(--p);color:var(--s);font-family:var(--f-l);line-height:1.6;padding-top:5vh; overflow-x: hidden;}
+
+        /* Header Minimal */
+        .h-m{padding:0 5vw;margin-bottom:5vh;}
+        .h-m a{font-family:var(--f-a);text-decoration:none;color:var(--s);font-size:.9rem;text-transform:uppercase;letter-spacing:.1em;display:inline-block;}
+
+        /* Main Container */
+        .plan-container{display:flex;padding:0 5vw;gap:5vw;min-height:90vh;}
+
+        /* Left Panel: Inputs (Aggressive Dark) */
+        .input-panel{flex:2;padding:3rem;background-color:var(--s);color:var(--p);box-shadow:10px 10px 0 var(--a);}
+        .input-panel h1{font-family:var(--f-a);font-size:2.5rem;margin-bottom:2rem;color:var(--p);text-transform:uppercase;}
+
+        /* Right Panel: Results */
+        .r-p{flex:3;padding:3rem;border:5px solid var(--s);}
+        .r-p h2{font-family:var(--f-a);font-size:2rem;margin-bottom:2rem;text-transform:uppercase;}
+
+        /* Tab Navigation */
+        .tab-nav{display:flex;margin-bottom:1.5rem;}
+        .tab-button{flex:1;padding:1rem;font-family:var(--f-a);background-color:var(--a);color:var(--s);border:none;cursor:pointer;transition:background-color .3s;border-bottom:3px solid var(--a);}
+        .tab-button.active{background-color:var(--p);color:var(--s);border-bottom:3px solid var(--s);}
+
+        /* Input Fields */
+        .input-group{margin-bottom:1.5rem;}
+        .input-group label{font-family:var(--f-a);color:var(--a);display:block;margin-bottom:.5rem;}
+        .input-group input, .input-group select{width:100%;padding:10px;border:1px solid var(--a);background-color:var(--s);color:var(--p);font-family:var(--f-l);}
+
+        /* Image Upload Area */
+        #photo-input{display:none;}
+        .upload-area{height:200px;border:3px dashed var(--a);display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;margin-bottom:1.5rem;overflow:hidden;}
+        #img-p{width:100%;height:100%;display:none;object-fit:cover;}
+
+        /* Action Button */
+        .a-b{width:100%;padding:1.5rem 0;background-color:var(--a);border:3px solid var(--a);color:var(--s);font-family:var(--f-a);font-size:1.2rem;font-weight:900;cursor:pointer;text-transform:uppercase;}
+        .a-b:hover{background-color:var(--p);color:var(--s);}
+
+        /* Result Display Formatting */
+        .plan-output h3{font-family:var(--f-a);color:var(--s);margin-top:1.5rem;margin-bottom:.5rem;text-transform:uppercase;border-bottom:2px solid var(--a);padding-bottom:.3rem;}
+        .plan-output ul{list-style-type:none;padding-left:10px;}
+        .plan-output li{margin-bottom:10px;font-family:var(--f-l);border-left:4px solid var(--a);padding-left:10px;}
+        .plan-output strong{color:#CC0000;font-family:var(--f-a);}
+
+        /* Responsive Styles */
+        @media (max-width:1024px){
+            .plan-container{flex-direction:column;gap:5vh;padding:0 3vw;}
+            .input-panel, .r-p{padding:1.5rem;box-shadow:none;}
+        }
+    </style>
+</head>
+<body>
+
+    <div class="h-m">
+        <a href="index.html">← MACROSYNC HOME</a>
+    </div>
+
+    <div class="plan-container">
+
+        <div class="input-panel">
+            <h1>MASTER YOUR PHYSIQUE.</h1>
+
+            <div class="tab-nav">
+                <button class="tab-button active" onclick="showTab('photo')">1. VISUAL AI PLAN</button>
+                <button class="tab-button" onclick="showTab('text')">2. DATA INPUT PLAN</button>
+            </div>
+
+            <div id="photo-tab">
+                <p style="color:var(--a);font-style:italic;margin-bottom:1rem;">Upload a full-body photo for personalized estimation of BMI and physique goals.</p>
+
+                <label for="photo-input" class="upload-area">
+                    <img id="img-p" alt="User Photo Preview">
+                    <p id="upload-text" style="color:var(--a);">CLICK TO UPLOAD PHOTO</p>
+                </label>
+                <input type="file" id="photo-input" accept="image/*">
+
+                <div class="input-group">
+                    <label for="goal">YOUR PRIMARY GOAL (REQUIRED)</label>
+                    <select id="goal">
+                        <option value="aggressive weight loss">Aggressive Weight Loss</option>
+                        <option value="lean muscle gain">Lean Muscle Gain</option>
+                        <option value="maintenance and optimization" selected>Maintenance & Optimization</option>
+                        <option value="extreme transformation">Extreme Body Transformation</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="text-tab" style="display:none;">
+                <div class="input-group">
+                    <label for="weight">CURRENT WEIGHT (KG/LBS)</label>
+                    <input type="text" id="weight" placeholder="e.g., 75 kg or 165 lbs">
+                </div>
+                <div class="input-group">
+                    <label for="height">HEIGHT (CM/INCHES)</label>
+                    <input type="text" id="height" placeholder="e.g., 180 cm or 71 inches">
+                </div>
+                <div class="input-group">
+                    <label for="activity">ACTIVITY LEVEL</label>
+                    <select id="activity">
+                        <option value="sedentary">Sedentary (Desk Job)</option>
+                        <option value="moderate exercise">Moderate Exercise (3-4 times/week)</option>
+                        <option value="intense daily training">Intense Daily Training</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="plan-duration">PLAN DURATION</label>
+                    <select id="plan-duration">
+                        <option value="1 day">1 Day Plan (Micro-Optimization)</option>
+                        <option value="7 days">7 Day Plan (Aggressive Macro Cycle)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="a-b" onclick="generatePlan()">GENERATE PLAN</button>
+        </div>
+
+        <div class="r-p">
+            <h2>PERSONALIZED PLAN REPORT</h2>
+            <div id="plan-output">
+                <p style="font-family:var(--f-l);color:var(--a);">Select your input method and tap 'Generate Plan' to begin your transformation protocol.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = "AIzaSyA_FGh7kx5sjA9DBeKkJ3ULlHrQsW6Gqlw"; // 🚨 REPLACE THIS WITH YOUR REAL API KEY 🚨
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+
+        // DOM Elements
+        const photoInput = document.getElementById('photo-input');
+        const imgPreview = document.getElementById('img-p');
+        const planOutput = document.getElementById('plan-output');
+        const planButton = document.querySelector('.a-b');
+        let currentTab = 'photo';
+        let base64Photo = null;
+
+        // --- CORE FUNCTIONALITY ---
+
+        function showTab(tabName) {
+            document.getElementById('photo-tab').style.display = (tabName === 'photo' ? 'block' : 'none');
+            document.getElementById('text-tab').style.display = (tabName === 'text' ? 'block' : 'none');
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.tab-button:nth-child(${tabName === 'photo' ? 1 : 2})`).classList.add('active');
+            currentTab = tabName;
+        }
+
+        // Helper function to convert file to Base64
+        function fileToBase64(file) {
+            return new Promise((r, j) => {
+                const reader = new FileReader();
+                reader.onload = () => r(reader.result.split(',')[1]);
+                reader.onerror = j;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Image Preview Listener
+        photoInput.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                base64Photo = await fileToBase64(file);
+                imgPreview.src = URL.createObjectURL(file);
+                imgPreview.style.display = 'block';
+                document.getElementById('upload-text').style.display = 'none';
+            }
+        });
+
+        // Fetch with Retry (Robust connection)
+        async function fetchWithRetry(url, options, maxRetries = 3) {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`API Request failed: ${JSON.stringify(errorData)}`);
+                    }
+                    return response;
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+            }
+        }
+
+        // --- PROMPT CONSTRUCTION AND AI CALL ---
+        async function generatePlan() {
+            planButton.textContent = 'GENERATING...';
+            planButton.disabled = true;
+            planOutput.innerHTML = '<p class="loading">CALCULATING PROTOCOL...</p>';
+
+            let userPrompt = "";
+            let imagePart = null;
+            let mimeType = '';
+
+            if (currentTab === 'photo') {
+                if (!base64Photo) { alert("Please upload a picture."); planButton.disabled = false; planButton.textContent = 'GENERATE PLAN'; return; }
+                const goal = document.getElementById('goal').value;
+                mimeType = photoInput.files[0].type;
+                imagePart = { inlineData: { mimeType: mimeType, data: base64Photo } };
+
+                userPrompt = `Analyze the full-body image provided. Estimate the user's current fitness level and body fat percentage. Based on the estimated physique, create an aggressive 7-day meal plan. The primary goal is: "${goal}". The plan must include a calorie goal and clear macro split.`;
+
+            } else { // Text Input Mode
+                const weight = document.getElementById('weight').value;
+                const height = document.getElementById('height').value;
+                const activity = document.getElementById('activity').value;
+                const duration = document.getElementById('plan-duration').value;
+                const goal = document.getElementById('goal').value;
+
+                if (!weight || !height) { alert("Please enter both weight and height."); planButton.disabled = false; planButton.textContent = 'GENERATE PLAN'; return; }
+
+                userPrompt = `The user is ${weight} in weight, ${height} in height, and has an activity level of "${activity}". Their goal is "${goal}". Create a detailed, aggressive ${duration} diet plan. The plan must include a TDEE estimate, a target calorie deficit/surplus, and a precise macro split recommendation.`;
+            }
+
+            const payload = {
+                contents: [{
+                    role: "user",
+                    parts: [
+                        { text: `System Instruction: You are MACROSYNC AI, a top-tier nutritionist. Based on the user data, generate an extremely detailed, aggressive, and highly effective diet plan. Structure the output clearly using Markdown headers for easy parsing. ${userPrompt}` },
+                        ...(imagePart ? [imagePart] : [])
+                    ]
+                }]
+            };
+
+            try {
+                const response = await fetchWithRetry(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text || "AI failed to generate a plan. Please check your prompt or try again.";
+
+                // Format the output into the final structure
+                planOutput.innerHTML = formatPlanReport(generatedText);
+
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                planOutput.innerHTML = `<h3 style="color:red;font-family:var(--f-a);margin-top:5rem;text-align:center;">GENERATION ERROR.</h3><p style="text-align:center;font-style:italic;color:var(--a);">Could not connect to AI. Check console for details.</p>`;
+            }
+
+            planButton.textContent = 'RE-GENERATE PLAN';
+            planButton.disabled = false;
+        }
+
+        // --- FORMATTING FUNCTION ---
+        function formatPlanReport(markdownText) {
+            const lines = markdownText.split('\n');
+            let htmlContent = "";
+            let inList = false;
+
+            // Simple aggressive title extraction
+            htmlContent += "<h2>PLAN PROTOCOL GENERATED</h2>";
+
+            for (const line of lines) {
+                if (line.startsWith('## ')) {
+                    if (inList) htmlContent += '</ul>';
+                    const title = line.substring(3).trim();
+                    htmlContent += `<h3>${title}</h3>`;
+                    inList = false;
+                } else if (line.startsWith('* ') || line.startsWith('- ')) {
+                    if (!inList) htmlContent += '<ul>';
+                    const content = line.substring(2).trim();
+                    // Bold key terms within the list item
+                    const styledContent = content.replace(/(\*\*.+?\*\*)/g, '<strong>$1</strong>').replace(/\*\*/g, '');
+                    htmlContent += `<li>${styledContent}</li>`;
+                    inList = true;
+                } else if (line.trim() !== '') {
+                    if (inList) htmlContent += '</ul>';
+                    htmlContent += `<p style="margin-top: 10px;">${line.trim().replace(/\*\*/g, '<strong>').replace(/\*\*/g, '</strong>')}</p>`;
+                    inList = false;
+                }
+            }
+            if (inList) htmlContent += '</ul>';
+
+            return `<div class="plan-output">${htmlContent}</div>`;
+        }
+
+        // Initialize tabs to start on the photo tab
+        document.addEventListener('DOMContentLoaded', () => {
+            showTab('photo');
+        });
+    </script>
+</body>
+</html>

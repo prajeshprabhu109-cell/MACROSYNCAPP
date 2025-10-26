@@ -112,6 +112,26 @@
             transition: all 0.3s;
         }
 
+        /* --- NEW STYLE FOR DIET PLAN BUTTON (CLEANED UP) --- */
+.diet-plan-button {
+    margin-top: 30px; /* Increased vertical space for separation */
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+    border: 3px solid var(--color-accent);
+
+    /* Inherited styles that need adjustment: */
+    display: block;
+    text-align: center;
+    text-decoration: none;
+
+    /* Remove the aggressive clipping path to make it a secondary visual action */
+    clip-path: none;
+}
+
+.diet-plan-button:hover {
+    background-color: var(--color-accent);
+    color: var(--color-secondary);
+}
         .analyze-button:hover {
             background-color: var(--color-primary);
             color: var(--color-secondary);
@@ -153,6 +173,7 @@
                 gap: 5vh;
             }
         }
+
     </style>
 </head>
 <body>
@@ -174,7 +195,11 @@
             </label>
             <input type="file" id="meal-photo" accept="image/*" required>
 
-            <button class="analyze-button" onclick="analyzeMeal()" disabled>Analyze Meal</button>
+            <button class="analyze-button" onclick="aM()" disabled>Analyze Meal</button>
+
+            <a href="diet.html" class="analyze-button diet-plan-button">
+                 GENERATE DIET PLAN →
+            </a>
         </div>
 
         <!-- Right Panel: Results Display -->
