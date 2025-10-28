@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MACROSYNC - Gemini AI Analysis</title>
+    <title>MACROSYNC - AI Analysis</title>
 
     <!-- Google Fonts for Aggressive (Montserrat) and Luxury (Playfair Display) -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -112,27 +112,27 @@
             transition: all 0.3s;
         }
 
-        /* --- NEW STYLE FOR DIET PLAN BUTTON (CLEANED UP) --- */
-.diet-plan-button {
-    margin-top: 30px; /* Increased vertical space for separation */
-    background-color: var(--color-secondary);
-    color: var(--color-primary);
-    border: 3px solid var(--color-accent);
-
-    /* Inherited styles that need adjustment: */
-    display: block;
-    text-align: center;
-    text-decoration: none;
-
-    /* Remove the aggressive clipping path to make it a secondary visual action */
-    clip-path: none;
-}
-
-.diet-plan-button:hover {
-    background-color: var(--color-accent);
-    color: var(--color-secondary);
-}
         .analyze-button:hover {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 1.5rem 0;
+            background-color: var(--color-accent);
+            border: 3px solid var(--color-accent);
+            color: var(--color-secondary);
+            font-family: var(--font-aggressive);
+            font-size: 1.2rem;
+            font-weight: 900;
+            cursor: pointer;
+            text-transform: uppercase;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
             background-color: var(--color-primary);
             color: var(--color-secondary);
         }
@@ -173,7 +173,6 @@
                 gap: 5vh;
             }
         }
-
     </style>
 </head>
 <body>
@@ -195,32 +194,32 @@
             </label>
             <input type="file" id="meal-photo" accept="image/*" required>
 
-            <button class="analyze-button" onclick="aM()" disabled>Analyze Meal</button>
-
-            <a href="diet.html" class="analyze-button diet-plan-button">
-                 GENERATE DIET PLAN →
-            </a>
+            <button class="analyze-button" onclick="analyzeMeal()" disabled>Analyze Meal</button>
+            <br>
+            <p style="color: black;">chnvnvbnhg</p>
+            <p>dfgshgfnfhn</p>
+            <a href="diet.html" class="cta-button">GENERATE DIET ANALYSIS</a>
         </div>
 
         <!-- Right Panel: Results Display -->
         <div class="results-panel">
             <h2>MACROS & VITALS REPORT</h2>
             <div id="data-output">
-                <p style="font-family: var(--font-luxury); color: var(--color-accent);">Upload an image to initiate the Gemini AI analysis.</p>
+                <p style="font-family: var(--font-luxury); color: var(--color-accent);">Upload an image to initiate the AI analysis.</p>
             </div>
         </div>
     </div>
 
     <!-- JAVASCRIPT: Gemini AI Integration -->
-   <script>
+    <script>
         const photoInput = document.getElementById('meal-photo');
         const imagePreview = document.getElementById('image-preview');
         const dataOutput = document.getElementById('data-output');
         const analyzeButton = document.querySelector('.analyze-button');
 
-        // --- GEMINI API CONFIGURATION (NOW CORRECT) ---
-        // Your valid, full API Key is inserted here:
-        const apiKey = "AIzaSyA_FGh7kx5sjA9DBeKkJ3ULlHrQsW6Gqlw";
+        // --- GEMINI API CONFIGURATION ---
+        // We use gemini-2.5-flash-preview-09-2025 for multi-modal (image) analysis.
+        const apiKey = "AIzaSyA_FGh7kx5sjA9DBeKkJ3ULlHrQsW6Gqlw"; // API Key is provided by the Canvas runtime environment.
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
         let base64ImageData = null;
@@ -259,12 +258,12 @@
             }
         });
 
-        // Exponential Backoff for API Retries (Robust connection handling)
+        // Exponential Backoff for API Retries
         async function fetchWithRetry(url, options, maxRetries = 3) {
             for (let i = 0; i < maxRetries; i++) {
                 try {
                     const response = await fetch(url, options);
-                    if (response.status === 429 && i < maxRetries - 1) {
+                    if (response.status === 429 && i < maxRetries - 1) { // 429 Too Many Requests
                         const delay = Math.pow(2, i) * 1000;
                         await new Promise(resolve => setTimeout(resolve, delay));
                         continue;
@@ -276,6 +275,7 @@
                     return response;
                 } catch (error) {
                     if (i === maxRetries - 1) throw error;
+                    // Otherwise, retry after delay
                 }
             }
         }
@@ -291,15 +291,14 @@
             analyzeButton.disabled = true;
             dataOutput.innerHTML = '<p class="loading">DECRYPTING FOOD ARCHITECTURE...</p>';
 
-            // The prompt dictates the aggressive, structured report style
-            const systemInstruction = "You are MACROSYNC AI, a precise, luxury nutrition analyst. Analyze the food in the image. Estimate portion size, ingredients, and provide a detailed, accurate-sounding nutritional report. Return ONLY the report content in structured Markdown format, following the required section headers below. Use bold text for values.";
+            // The prompt asks the AI to act as a nutrition expert and return structured Markdown
+            const systemInstruction = "You are MACROSYNC AI, a precise, luxury nutrition analyst. Analyze the food in the image. Estimate the portion size, ingredients, and provide a detailed, accurate-sounding nutritional report. Return ONLY the report content in structured Markdown format, following the required section headers below.";
 
-            const userQuery = `Analyze the food in this image. Provide the report details for a 200g serving of the main dish. Structure the report precisely into two sections using markdown headers: ## MACRONUTRIENTS - FUEL MASTERY and ## MICRONUTRIENTS & VITALS - OPTIMIZED PERFORMANCE. For each item, include the value and a brief, aggressive status note.
-
-**REQUIRED FORMAT:**
-- Start with: Recognized Dish: [Name of Dish]
-- Use Markdown list items (* ) for all data points.
-- Include all fields: Carbohydrates, Proteins, Fats, Fiber, Energy (Kcal), Iron, Calcium, Vitamin D, Vitamin C, Potassium, Zinc.`;
+            const userQuery = `Analyze the food in this image. Provide the report details for:
+- MACRONUTRIENTS (Carbs, Proteins, Fats, Fiber)
+- MICRONUTRIENTS & VITALS (Energy, Iron, Calcium, Vitamin D, Vitamin C, Potassium, Zinc).
+- Give precise-sounding amounts (e.g., 65g, 720 Kcal) and include the percentage of total energy for macros.
+- Start your response with the name of the dish you recognized (e.g., "Recognized Dish: Salmon Fillet and Asparagus").`;
 
             const mimeType = photoInput.files[0].type;
 
@@ -329,7 +328,7 @@
                 });
 
                 const result = await response.json();
-                const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text || "AI failed to generate a complete report. Please try a clearer image.";
+                const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text || "AI failed to generate a complete report.";
 
                 // Format the output into the luxurious report structure
                 const formattedReport = formatGeminiReport(generatedText);
@@ -343,7 +342,7 @@
                         AI CONNECTION ERROR.
                     </h3>
                     <p style="text-align:center; font-family: var(--font-luxury); color: var(--color-secondary); margin-top: 10px;">
-                        The Gemini AI failed to analyze the image. Please try again or check the console for details.
+                        The AI failed to analyze the image. Please try again.
                     </p>
                     <p style="text-align:center; font-style: italic; color: var(--color-accent);">${error.message}</p>
                 `;
@@ -355,31 +354,34 @@
 
         // Function to style and format the Gemini Markdown output into the report structure
         function formatGeminiReport(markdownText) {
+            // Basic replacement to structure the output using the required style
             const lines = markdownText.split('\n');
             let dishName = "MACROS & VITALS REPORT";
             let content = "";
             let inList = false;
 
-            // 1. Extract Dish Name
-            const dishNameLine = lines.find(line => line.startsWith('Recognized Dish:'));
-            if (dishNameLine) {
-                dishName = dishNameLine.replace('Recognized Dish:', '').trim().toUpperCase();
-            }
-
             for (const line of lines) {
+                if (line.startsWith('Recognized Dish:')) {
+                    dishName = line.replace('Recognized Dish:', '').trim().toUpperCase();
+                    continue;
+                }
+
                 if (line.startsWith('## ')) {
                     if (inList) content += '</ul></div>';
                     const sectionTitle = line.substring(3).trim();
                     content += `<div class="data-section"><h3>${sectionTitle}</h3><ul class="data-list">`;
                     inList = true;
                 } else if (line.startsWith('* ')) {
-                    // Convert Markdown list item to structured list (Item: <strong>Value</strong>)
+                    // Convert * Item: Value to <li>Item: <strong>Value</strong></li>
                     const parts = line.substring(2).split(':');
                     if (parts.length > 1) {
-                        content += `<li>${parts[0].trim()}: <strong>${parts.slice(1).join(':').trim()}</strong></li>`;
+                         // Wrap the value part in strong tags for the aggressive look
+                        content += `<li>${parts[0].trim()}: <strong>${parts[1].trim()}</strong></li>`;
+                    } else {
+                        content += `<li>${line.substring(2)}</li>`;
                     }
                 } else if (line.trim() !== '') {
-                    // Any other significant text is a paragraph
+                    // Any other text is a paragraph
                     content += `<p style="margin-top: 10px; font-style: italic;">${line.trim()}</p>`;
                 }
             }
